@@ -1,17 +1,12 @@
-from django.urls import path
-from .views import (
-    EstudianteListCreateAPIView,
-    EstudianteRetrieveUpdateDestroyAPIView,
-    FuncionarioValidadorListCreateAPIView,
-    FuncionarioValidadorRetrieveUpdateDestroyAPIView,
-)
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import EstudianteViewSet, FuncionarioViewSet, register_user
+
+router = DefaultRouter()
+router.register(r'estudiantes', EstudianteViewSet)
+router.register(r'funcionarios', FuncionarioViewSet)
 
 urlpatterns = [
-    # Estudiantes
-    path('estudiantes/', EstudianteListCreateAPIView.as_view(), name='estudiante-list-create'),
-    path('estudiantes/<int:pk>/', EstudianteRetrieveUpdateDestroyAPIView.as_view(), name='estudiante-detail'),
-
-    # Funcionarios Validadores
-    path('funcionarios/', FuncionarioValidadorListCreateAPIView.as_view(), name='funcionario-list-create'),
-    path('funcionarios/<int:pk>/', FuncionarioValidadorRetrieveUpdateDestroyAPIView.as_view(), name='funcionario-detail'),
+    path('', include(router.urls)),
+    path('register/', register_user, name='register'),
 ]

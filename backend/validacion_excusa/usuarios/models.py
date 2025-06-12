@@ -1,22 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
 from facultades.models import ProgramaAcademico
 
 class Estudiante(models.Model):
-    id_estudiante = models.AutoField(primary_key=True)
-    nombre_completo = models.CharField(max_length=150)
-    codigo_estudiante = models.CharField(max_length=50, unique=True)
-    correo = models.EmailField(unique=True)
-    id_programa = models.ForeignKey(ProgramaAcademico, on_delete=models.CASCADE, related_name='estudiantes')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    codigo_estudiante = models.CharField(max_length=20, blank=True, null=True)
+    programa = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.nombre_completo} ({self.codigo_estudiante})"
+        return f"{self.user.username} - {self.codigo_estudiante}"
 
+class Funcionario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cargo = models.CharField(max_length=100, blank=True, null=True)
+    departamento = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.cargo}"
 
 class FuncionarioValidador(models.Model):
-    id_funcionario = models.AutoField(primary_key=True)
-    nombre_completo = models.CharField(max_length=150)
-    correo_institucional = models.EmailField(unique=True)
-    dependencia = models.CharField(max_length=100)
+    funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
+    facultad = models.CharField(max_length=100)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nombre_completo} - {self.dependencia}"
+        return f"{self.funcionario.user.username} - Validador de {self.facultad}"

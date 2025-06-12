@@ -1,13 +1,17 @@
 from django.contrib import admin
-from .models import Estudiante, FuncionarioValidador
+from .models import Estudiante, Funcionario, FuncionarioValidador
 
 @admin.register(Estudiante)
 class EstudianteAdmin(admin.ModelAdmin):
-    list_display = ('id_estudiante', 'nombre_completo', 'codigo_estudiante', 'correo', 'id_programa')
-    search_fields = ('nombre_completo', 'codigo_estudiante', 'correo')
+    list_display = ('user', 'codigo_estudiante', 'programa')
+    search_fields = ('user__username', 'codigo_estudiante')
 
+@admin.register(Funcionario)
+class FuncionarioAdmin(admin.ModelAdmin):
+    list_display = ('user', 'cargo', 'departamento')
+    search_fields = ('user__username', 'cargo')
 
 @admin.register(FuncionarioValidador)
 class FuncionarioValidadorAdmin(admin.ModelAdmin):
-    list_display = ('id_funcionario', 'nombre_completo', 'correo_institucional', 'dependencia')
-    search_fields = ('nombre_completo', 'correo_institucional', 'dependencia')
+    list_display = ('funcionario', 'facultad', 'fecha_asignacion')
+    search_fields = ('funcionario__user__username', 'facultad')

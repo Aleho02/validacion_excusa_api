@@ -1,12 +1,29 @@
 from rest_framework import serializers
-from .models import Estudiante, FuncionarioValidador
+from django.contrib.auth.models import User
+from .models import Estudiante, Funcionario, FuncionarioValidador
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email')
 
 class EstudianteSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Estudiante
-        fields = ['id_estudiante', 'nombre_completo', 'codigo_estudiante', 'correo', 'id_programa']
+        fields = '__all__'
+
+class FuncionarioSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Funcionario
+        fields = '__all__'
 
 class FuncionarioValidadorSerializer(serializers.ModelSerializer):
+    funcionario = FuncionarioSerializer(read_only=True)
+
     class Meta:
         model = FuncionarioValidador
-        fields = ['id_funcionario', 'nombre_completo', 'correo_institucional', 'dependencia']
+        fields = '__all__'
